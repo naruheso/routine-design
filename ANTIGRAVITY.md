@@ -86,6 +86,7 @@
 | 画面設計 | `docs/screen-design.md` | 全画面の構成・レイアウト・項目定義 |
 | ドメインモデル設計 | `docs/domain-model.md` | エンティティ・値オブジェクト・ビジネスルールの定義 |
 | DB設計書 | `docs/db-design.md` | ER図および各テーブルの詳細カラム定義 |
+| Copilot指示書 | `.github/copilot-instructions.md` | AIアシスタント用コーディングガイドライン |
 
 ## 7. 用語定義
 
