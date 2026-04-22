@@ -647,6 +647,7 @@ AIコーディング時のDB設計ガイドとして、主要エンティティ�
 
 ```mermaid
 erDiagram
+    USERS ||--|{ USER_ROLES : "持つ"
     USERS ||--o{ EXPENSES : "申請する"
     USERS ||--o{ APPROVAL_HISTORY : "操作する"
     EXPENSES ||--o{ APPROVAL_HISTORY : "履歴を持つ"
@@ -657,9 +658,14 @@ erDiagram
         string name
         string email
         string password_hash
-        enum role
         timestamp created_at
         timestamp updated_at
+    }
+
+    USER_ROLES {
+        uuid user_id PK, FK
+        varchar role PK
+        timestamp created_at
     }
 
     EXPENSES {
@@ -705,9 +711,16 @@ erDiagram
 | name | `varchar(100)` | NO | 氏名 |
 | email | `varchar(255)` | NO | メールアドレス（ユニーク） |
 | password_hash | `varchar(255)` | NO | パスワードハッシュ |
-| role | `enum('applicant','manager','expense_admin','finance_director')` | NO | ロール |
 | created_at | `timestamp` | NO | 作成日時 |
 | updated_at | `timestamp` | NO | 更新日時 |
+
+#### user_roles テーブル
+
+| カラム | 型 | NULL | 説明 |
+|--------|-----|------|------|
+| user_id | `uuid` | NO | ユーザーID（FK → users.id） |
+| role | `enum('applicant','manager','expense_admin','finance_director')` | NO | ロール |
+| created_at | `timestamp` | NO | ロール付与日時 |
 
 #### expenses テーブル
 
