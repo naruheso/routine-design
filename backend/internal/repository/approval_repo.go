@@ -26,7 +26,7 @@ func (r *ApprovalRepository) Create(ctx context.Context, history *model.Approval
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id, created_at`
 
-	return r.pool.QueryRow(ctx, query,
+	return GetDBQuerier(ctx, r.pool).QueryRow(ctx, query,
 		history.ExpenseID, history.Action, history.ActorID, history.ActorRole, history.Comment,
 	).Scan(&history.ID, &history.CreatedAt)
 }
@@ -40,7 +40,7 @@ func (r *ApprovalRepository) FindByExpenseID(ctx context.Context, expenseID stri
 		WHERE ah.expense_id = $1
 		ORDER BY ah.created_at ASC`
 
-	rows, err := r.pool.Query(ctx, query, expenseID)
+	rows, err := GetDBQuerier(ctx, r.pool).Query(ctx, query, expenseID)
 	if err != nil {
 		return nil, fmt.Errorf("query approval histories: %w", err)
 	}
@@ -71,7 +71,7 @@ func NewCategoryRepository(pool *pgxpool.Pool) *CategoryRepository {
 // FindAllActive は有効な勘定科目を取得する。
 func (r *CategoryRepository) FindAllActive(ctx context.Context) ([]model.Category, error) {
 	query := `SELECT id, code, name, sort_order, is_active FROM categories WHERE is_active = true ORDER BY sort_order`
-	rows, err := r.pool.Query(ctx, query)
+	rows, err := GetDBQuerier(ctx, r.pool).Query(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("query categories: %w", err)
 	}

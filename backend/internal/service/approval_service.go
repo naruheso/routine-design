@@ -12,11 +12,12 @@ import (
 type ApprovalService struct {
 	expenseRepo  *repository.ExpenseRepository
 	approvalRepo *repository.ApprovalRepository
+	txManager    repository.TransactionManager
 }
 
 // NewApprovalService はApprovalServiceを生成する。
-func NewApprovalService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository) *ApprovalService {
-	return &ApprovalService{expenseRepo: expenseRepo, approvalRepo: approvalRepo}
+func NewApprovalService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository, txManager repository.TransactionManager) *ApprovalService {
+	return &ApprovalService{expenseRepo: expenseRepo, approvalRepo: approvalRepo, txManager: txManager}
 }
 
 // GetPendingForRole は指定ロールの承認待ち経費一覧を取得する。
@@ -106,21 +107,27 @@ func (s *ApprovalService) processApproval(ctx context.Context, expenseID string,
 		newStatus = model.StatusRejected
 	}
 
-	// ステータス更新（排他制御付き）
-	if err := s.expenseRepo.UpdateStatus(ctx, expenseID, expense.Status, newStatus); err != nil {
-		return fmt.Errorf("update status: %w", err)
-	}
+	// トランザクション内でステータス更新と履歴作成を行う
+	err = s.txManager.RunInTransaction(ctx, func(txCtx context.Context) error {
+		if err := s.expenseRepo.UpdateStatus(txCtx, expenseID, expense.Status, newStatus); err != nil {
+			return fmt.Errorf("update status: %w", err)
+		}
 
-	// 承認履歴を記録
-	history := &model.ApprovalHistory{
-		ExpenseID: expenseID,
-		Action:    action,
-		ActorID:   actorID,
-		ActorRole: matchedRole,
-		Comment:   comment,
-	}
-	if err := s.approvalRepo.Create(ctx, history); err != nil {
-		return fmt.Errorf("create approval history: %w", err)
+		history := &model.ApprovalHistory{
+			ExpenseID: expenseID,
+			Action:    action,
+			ActorID:   actorID,
+			ActorRole: matchedRole,
+			Comment:   comment,
+		}
+		if err := s.approvalRepo.Create(txCtx, history); err != nil {
+			return fmt.Errorf("create approval history: %w", err)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return fmt.Errorf("process approval transaction failed: %w", err)
 	}
 
 	return nil

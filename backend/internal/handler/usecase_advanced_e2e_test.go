@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/amical/routine-design/backend/internal/middleware"
 	"github.com/amical/routine-design/backend/internal/model"
 	"github.com/amical/routine-design/backend/internal/repository"
 	"github.com/amical/routine-design/backend/internal/service"
@@ -35,10 +34,11 @@ func setupFullE2E(t *testing.T) *gin.Engine {
 	approvalRepo := repository.NewApprovalRepository(testPool)
 	categoryRepo := repository.NewCategoryRepository(testPool)
 	reportRepo := repository.NewReportRepository(testPool)
+	txManager := repository.NewTransactionManager(testPool)
 
 	authService := service.NewAuthService(userRepo)
-	expenseService := service.NewExpenseService(expenseRepo, approvalRepo)
-	approvalService := service.NewApprovalService(expenseRepo, approvalRepo)
+	expenseService := service.NewExpenseService(expenseRepo, approvalRepo, txManager)
+	approvalService := service.NewApprovalService(expenseRepo, approvalRepo, txManager)
 	reportService := service.NewReportService(reportRepo)
 
 	authHandler := NewAuthHandler(authService)
@@ -47,37 +47,7 @@ func setupFullE2E(t *testing.T) *gin.Engine {
 	categoryHandler := NewCategoryHandler(categoryRepo)
 	reportHandler := NewReportHandler(reportService)
 
-	r := gin.New()
-	r.Use(gin.Recovery())
-	api := r.Group("/api")
-	{
-		api.POST("/auth/login", authHandler.Login)
-		authorized := api.Group("/")
-		authorized.Use(middleware.AuthMiddleware())
-		{
-			expenses := authorized.Group("/expenses")
-			{
-				expenses.GET("", expenseHandler.List)
-				expenses.POST("", expenseHandler.Create)
-				expenses.GET("/:id", expenseHandler.GetByID)
-				expenses.PUT("/:id", expenseHandler.Update)
-				expenses.POST("/:id/submit", expenseHandler.Submit)
-			}
-			approvals := authorized.Group("/approvals")
-			{
-				approvals.GET("/pending", approvalHandler.GetPending)
-				approvals.POST("/:id/approve", approvalHandler.Approve)
-				approvals.POST("/:id/return", approvalHandler.Return)
-				approvals.POST("/:id/reject", approvalHandler.Reject)
-			}
-			authorized.GET("/categories", categoryHandler.List)
-			reports := authorized.Group("/reports")
-			{
-				reports.GET("/by-employee", reportHandler.ByEmployee)
-				reports.GET("/by-category", reportHandler.ByCategory)
-			}
-		}
-	}
+	r := SetupRouter(authHandler, expenseHandler, approvalHandler, categoryHandler, reportHandler)
 	return r
 }
 

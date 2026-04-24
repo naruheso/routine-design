@@ -6,10 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/gin-gonic/gin"
-
 	"github.com/amical/routine-design/backend/internal/handler"
-	"github.com/amical/routine-design/backend/internal/middleware"
 	"github.com/amical/routine-design/backend/internal/repository"
 	"github.com/amical/routine-design/backend/internal/service"
 )
@@ -31,11 +28,12 @@ func main() {
 	approvalRepo := repository.NewApprovalRepository(pool)
 	categoryRepo := repository.NewCategoryRepository(pool)
 	reportRepo := repository.NewReportRepository(pool)
+	txManager := repository.NewTransactionManager(pool)
 
 	// Service
 	authService := service.NewAuthService(userRepo)
-	expenseService := service.NewExpenseService(expenseRepo, approvalRepo)
-	approvalService := service.NewApprovalService(expenseRepo, approvalRepo)
+	expenseService := service.NewExpenseService(expenseRepo, approvalRepo, txManager)
+	approvalService := service.NewApprovalService(expenseRepo, approvalRepo, txManager)
 	reportService := service.NewReportService(reportRepo)
 
 	// Handler
@@ -46,54 +44,7 @@ func main() {
 	reportHandler := handler.NewReportHandler(reportService)
 
 	// Router
-	r := gin.Default()
-	r.Use(middleware.CORSMiddleware())
-
-	// ヘルスチェック
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
-	})
-
-	api := r.Group("/api")
-	{
-		// 認証（公開）
-		api.POST("/auth/login", authHandler.Login)
-
-		// 認証必須エンドポイント
-		authorized := api.Group("/")
-		authorized.Use(middleware.AuthMiddleware())
-		{
-			// 経費
-			expenses := authorized.Group("/expenses")
-			{
-				expenses.GET("", expenseHandler.List)
-				expenses.POST("", expenseHandler.Create)
-				expenses.GET("/:id", expenseHandler.GetByID)
-				expenses.PUT("/:id", expenseHandler.Update)
-				expenses.DELETE("/:id", expenseHandler.Delete)
-				expenses.POST("/:id/submit", expenseHandler.Submit)
-			}
-
-			// 承認
-			approvals := authorized.Group("/approvals")
-			{
-				approvals.GET("/pending", approvalHandler.GetPending)
-				approvals.POST("/:id/approve", approvalHandler.Approve)
-				approvals.POST("/:id/return", approvalHandler.Return)
-				approvals.POST("/:id/reject", approvalHandler.Reject)
-			}
-
-			// 勘定科目
-			authorized.GET("/categories", categoryHandler.List)
-
-			// 集計レポート
-			reports := authorized.Group("/reports")
-			{
-				reports.GET("/by-employee", reportHandler.ByEmployee)
-				reports.GET("/by-category", reportHandler.ByCategory)
-			}
-		}
-	}
+	r := handler.SetupRouter(authHandler, expenseHandler, approvalHandler, categoryHandler, reportHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

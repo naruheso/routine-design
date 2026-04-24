@@ -32,7 +32,7 @@ func (r *ExpenseRepository) FindByID(ctx context.Context, id string) (*model.Exp
 		JOIN categories c ON e.category_id = c.id
 		WHERE e.id = $1`
 
-	return r.scanExpense(r.pool.QueryRow(ctx, query, id))
+	return r.scanExpense(GetDBQuerier(ctx, r.pool).QueryRow(ctx, query, id))
 }
 
 // FindByUserID はユーザーIDで経費一覧を取得する。
@@ -72,7 +72,7 @@ func (r *ExpenseRepository) Create(ctx context.Context, expense *model.Expense) 
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id, created_at, updated_at`
 
-	return r.pool.QueryRow(ctx, query,
+	return GetDBQuerier(ctx, r.pool).QueryRow(ctx, query,
 		expense.UserID, expense.ExpenseDate, expense.CategoryID,
 		expense.Amount, expense.Description, expense.Status,
 	).Scan(&expense.ID, &expense.CreatedAt, &expense.UpdatedAt)
@@ -87,7 +87,7 @@ func (r *ExpenseRepository) Update(ctx context.Context, expense *model.Expense) 
 		WHERE id = $1 AND status IN ('draft', 'returned')
 		RETURNING updated_at`
 
-	err := r.pool.QueryRow(ctx, query,
+	err := GetDBQuerier(ctx, r.pool).QueryRow(ctx, query,
 		expense.ID, expense.ExpenseDate, expense.CategoryID,
 		expense.Amount, expense.Description,
 	).Scan(&expense.UpdatedAt)
@@ -113,7 +113,7 @@ func (r *ExpenseRepository) UpdateStatus(ctx context.Context, id string, expecte
 	}
 
 	var returnedID string
-	err := r.pool.QueryRow(ctx, query, id, expectedStatus, newStatus, submittedAt).Scan(&returnedID)
+	err := GetDBQuerier(ctx, r.pool).QueryRow(ctx, query, id, expectedStatus, newStatus, submittedAt).Scan(&returnedID)
 	if err == pgx.ErrNoRows {
 		return fmt.Errorf("排他制御エラー: %w", fmt.Errorf("この申請は既に他のユーザーによって処理されています"))
 	}
@@ -123,7 +123,7 @@ func (r *ExpenseRepository) UpdateStatus(ctx context.Context, id string, expecte
 // Delete は下書きの経費を削除する。
 func (r *ExpenseRepository) Delete(ctx context.Context, id string, userID string) error {
 	query := `DELETE FROM expenses WHERE id = $1 AND user_id = $2 AND status = 'draft'`
-	tag, err := r.pool.Exec(ctx, query, id, userID)
+	tag, err := GetDBQuerier(ctx, r.pool).Exec(ctx, query, id, userID)
 	if err != nil {
 		return fmt.Errorf("delete expense: %w", err)
 	}
@@ -152,7 +152,7 @@ func (r *ExpenseRepository) scanExpense(row pgx.Row) (*model.Expense, error) {
 }
 
 func (r *ExpenseRepository) queryExpenses(ctx context.Context, query string, args ...interface{}) ([]model.Expense, error) {
-	rows, err := r.pool.Query(ctx, query, args...)
+	rows, err := GetDBQuerier(ctx, r.pool).Query(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query expenses: %w", err)
 	}

@@ -10,13 +10,14 @@ import (
 
 // ExpenseService は経費のビジネスロジックを提供する。
 type ExpenseService struct {
-	expenseRepo *repository.ExpenseRepository
+	expenseRepo  *repository.ExpenseRepository
 	approvalRepo *repository.ApprovalRepository
+	txManager    repository.TransactionManager
 }
 
 // NewExpenseService はExpenseServiceを生成する。
-func NewExpenseService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository) *ExpenseService {
-	return &ExpenseService{expenseRepo: expenseRepo, approvalRepo: approvalRepo}
+func NewExpenseService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository, txManager repository.TransactionManager) *ExpenseService {
+	return &ExpenseService{expenseRepo: expenseRepo, approvalRepo: approvalRepo, txManager: txManager}
 }
 
 // FindByID は経費を取得する。
@@ -105,23 +106,29 @@ func (s *ExpenseService) Submit(ctx context.Context, id string, userID string) (
 	}
 
 	// ステータス更新
-	if err := s.expenseRepo.UpdateStatus(ctx, id, expense.Status, model.StatusPendingManager); err != nil {
-		return nil, fmt.Errorf("submit expense: %w", err)
+	// トランザクション内でステータス更新と履歴作成を行う
+	err = s.txManager.RunInTransaction(ctx, func(txCtx context.Context) error {
+		if err := s.expenseRepo.UpdateStatus(txCtx, id, expense.Status, model.StatusPendingManager); err != nil {
+			return fmt.Errorf("update status: %w", err)
+		}
+
+		history := &model.ApprovalHistory{
+			ExpenseID: id,
+			Action:    model.ActionSubmit,
+			ActorID:   userID,
+			ActorRole: model.RoleApplicant,
+		}
+		if err := s.approvalRepo.Create(txCtx, history); err != nil {
+			return fmt.Errorf("create submit history: %w", err)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("submit expense transaction failed: %w", err)
 	}
 
-	// 承認履歴に「申請」を記録
-	action := model.ActionSubmit
-	history := &model.ApprovalHistory{
-		ExpenseID: id,
-		Action:    action,
-		ActorID:   userID,
-		ActorRole: model.RoleApplicant,
-	}
-	if err := s.approvalRepo.Create(ctx, history); err != nil {
-		return nil, fmt.Errorf("create submit history: %w", err)
-	}
-
-	return s.expenseRepo.FindByID(ctx, id)
+	return s.FindByID(ctx, id)
 }
 
 // Delete は下書きの経費を削除する。

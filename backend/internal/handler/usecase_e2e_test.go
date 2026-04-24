@@ -17,7 +17,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/amical/routine-design/backend/internal/middleware"
 	"github.com/amical/routine-design/backend/internal/model"
 	"github.com/amical/routine-design/backend/internal/repository"
 	"github.com/amical/routine-design/backend/internal/service"
@@ -53,10 +52,11 @@ func setupE2E(t *testing.T) *gin.Engine {
 	approvalRepo := repository.NewApprovalRepository(testPool)
 	categoryRepo := repository.NewCategoryRepository(testPool)
 	reportRepo := repository.NewReportRepository(testPool)
+	txManager := repository.NewTransactionManager(testPool)
 
 	authService := service.NewAuthService(userRepo)
-	expenseService := service.NewExpenseService(expenseRepo, approvalRepo)
-	approvalService := service.NewApprovalService(expenseRepo, approvalRepo)
+	expenseService := service.NewExpenseService(expenseRepo, approvalRepo, txManager)
+	approvalService := service.NewApprovalService(expenseRepo, approvalRepo, txManager)
 	reportService := service.NewReportService(reportRepo)
 
 	authHandler := NewAuthHandler(authService)
@@ -65,30 +65,7 @@ func setupE2E(t *testing.T) *gin.Engine {
 	categoryHandler := NewCategoryHandler(categoryRepo)
 	reportHandler := NewReportHandler(reportService)
 
-	// 未使用エラー回避
-	_ = categoryHandler
-	_ = reportHandler
-
-	r := gin.New()
-	r.Use(gin.Recovery())
-	api := r.Group("/api")
-	{
-		api.POST("/auth/login", authHandler.Login)
-		authorized := api.Group("/")
-		authorized.Use(middleware.AuthMiddleware())
-		{
-			expenses := authorized.Group("/expenses")
-			{
-				expenses.POST("", expenseHandler.Create)
-				expenses.POST("/:id/submit", expenseHandler.Submit)
-				expenses.GET("/:id", expenseHandler.GetByID)
-			}
-			approvals := authorized.Group("/approvals")
-			{
-				approvals.POST("/:id/approve", approvalHandler.Approve)
-			}
-		}
-	}
+	r := SetupRouter(authHandler, expenseHandler, approvalHandler, categoryHandler, reportHandler)
 	return r
 }
 

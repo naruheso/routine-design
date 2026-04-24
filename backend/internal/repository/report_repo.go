@@ -4,17 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/amical/routine-design/backend/internal/model"
 )
-
-// DBQuerier は pgxpool.Pool の一部のメソッドを抽象化したインターフェース。
-type DBQuerier interface {
-	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
-	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
-}
 
 // ReportRepository は集計レポートのDB操作を提供する。
 type ReportRepository struct {
