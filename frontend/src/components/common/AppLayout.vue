@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ROLE_DISPLAY_NAMES } from '@/types/user'
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+// 集計レポートは expense_admin / finance_director のみ表示
+const isReportViewer = computed(() => {
+  return authStore.hasRole('expense_admin') || authStore.hasRole('finance_director')
+})
 
 function handleLogout() {
   authStore.logout()
@@ -21,6 +27,7 @@ function handleLogout() {
       <nav class="app-header__nav">
         <router-link to="/" class="nav-link">経費一覧</router-link>
         <router-link v-if="authStore.isApprover" to="/approvals" class="nav-link">承認待ち</router-link>
+        <router-link v-if="isReportViewer" to="/reports" class="nav-link">集計レポート</router-link>
       </nav>
       <div class="app-header__right">
         <span class="app-header__user">
