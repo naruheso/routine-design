@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -28,7 +27,7 @@ func NewReportHandler(reportService *service.ReportService) *ReportHandler {
 func (h *ReportHandler) ByEmployee(c *gin.Context) {
 	year, month, err := parseYearMonth(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.ErrorResponse{Error: err.Error()})
+		c.JSON(http.StatusBadRequest, model.ErrorResponse(err.Error()))
 		return
 	}
 
@@ -38,7 +37,7 @@ func (h *ReportHandler) ByEmployee(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, model.SuccessResponse{Data: result})
+	c.JSON(http.StatusOK, model.SuccessResponse(result))
 }
 
 // ByCategory は勘定科目別集計レポートを取得する。
@@ -46,7 +45,7 @@ func (h *ReportHandler) ByEmployee(c *gin.Context) {
 func (h *ReportHandler) ByCategory(c *gin.Context) {
 	year, month, err := parseYearMonth(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.ErrorResponse{Error: err.Error()})
+		c.JSON(http.StatusBadRequest, model.ErrorResponse(err.Error()))
 		return
 	}
 
@@ -56,7 +55,7 @@ func (h *ReportHandler) ByCategory(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, model.SuccessResponse{Data: result})
+	c.JSON(http.StatusOK, model.SuccessResponse(result))
 }
 
 // parseYearMonth はクエリパラメータからyear, monthを取得する。
@@ -69,12 +68,12 @@ func parseYearMonth(c *gin.Context) (int, int, error) {
 
 	year, err := strconv.Atoi(yearStr)
 	if err != nil {
-		return 0, 0, fmt.Errorf("year パラメータが不正です")
+		return 0, 0, errors.New("year パラメータが不正です")
 	}
 
 	month, err := strconv.Atoi(monthStr)
 	if err != nil {
-		return 0, 0, fmt.Errorf("month パラメータが不正です")
+		return 0, 0, errors.New("month パラメータが不正です")
 	}
 
 	return year, month, nil
@@ -83,8 +82,8 @@ func parseYearMonth(c *gin.Context) (int, int, error) {
 // handleReportError はレポートサービスのエラーをHTTPレスポンスに変換する。
 func handleReportError(c *gin.Context, err error) {
 	if errors.Is(err, service.ErrValidation) {
-		c.JSON(http.StatusBadRequest, model.ErrorResponse{Error: err.Error()})
+		c.JSON(http.StatusBadRequest, model.ErrorResponse(err.Error()))
 		return
 	}
-	c.JSON(http.StatusInternalServerError, model.ErrorResponse{Error: "内部エラー"})
+	c.JSON(http.StatusInternalServerError, model.ErrorResponse("内部エラー"))
 }
