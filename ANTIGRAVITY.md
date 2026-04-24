@@ -32,11 +32,11 @@
 ## 3. MVP の範囲
 
 ### Phase 1（MVP）— 基本フロー
-- [ ] ユーザー認証（ログイン/ログアウト）
-- [ ] 経費データ CRUD（入力・修正・削除）
-- [ ] 申請・再申請機能
-- [ ] 3段階承認フロー（承認/否認/差し戻し）
-- [ ] 申請ステータス管理・表示
+- [x] ユーザー認証（ログイン/ログアウト）
+- [x] 経費データ CRUD（入力・修正・削除）
+- [x] 申請・再申請機能
+- [x] 3段階承認フロー（承認/否認/差し戻し）
+- [x] 申請ステータス管理・表示
 
 ### Phase 2 — 集計・レポート
 - [ ] 社員別 × 月別 合計金額の集計画面
@@ -49,15 +49,19 @@
 
 ## 4. 技術スタック
 
-> ※ ドキュメント先行フェーズのため、技術スタックは実装開始時に決定する
-
-| レイヤー | 候補 |
-|---------|------|
-| フロントエンド | 未定 |
-| バックエンド | 未定 |
-| データベース | 未定 |
-| 認証 | 未定 |
-| ファイルストレージ | 未定（領収書画像用） |
+| レイヤー | 技術 | 備考 |
+|---------|------|------|
+| フロントエンド | **Vue 3** + **Vite** + **TypeScript** | Composition API (`<script setup>`) |
+| UIフレームワーク | **PrimeVue v4**（Aura テーマ） | DataTable, Form, Calendar 等 |
+| 状態管理 | **Pinia** | Setup Store 形式 |
+| バックエンド | **Go 1.23** + **Gin** | 3層アーキテクチャ (Handler→Service→Repository) |
+| DB | **PostgreSQL 16** | Docker コンテナ |
+| DB操作 | **pgx/v5** + **sqlc** | SQL → Go コード自動生成 |
+| 認証 | **JWT** (`golang-jwt/jwt/v5`) | Bearer Token 方式 |
+| ファイルストレージ | ローカルストレージ（将来 S3 移行） | 領収書画像用 |
+| 開発環境 | **Docker Compose** | ホットリロード対応 (**Air v1.61.0**, Vite) |
+| テスト (Backend) | `testing` + `testify` + `httptest` | テーブル駆動テスト |
+| テスト (Frontend) | **Vitest** + `@vue/test-utils` | jsdom 環境 |
 
 ## 5. 現在のステップ
 
@@ -70,9 +74,11 @@
 | 受入テスト仕様書作成 | ✅ 完了 |
 | テストデータ定義 | ✅ 完了 |
 | ドメインモデル設計 | ✅ 完了 |
-| 技術スタック選定 | ⬜ 未着手 |
+| 技術スタック選定 | ✅ 完了 |
 | DB設計 | ✅ 完了 |
-| MVP実装 | ⬜ 未着手 |
+| システム構成構築 | ✅ 完了 |
+| MVP実装 (Phase 1) | ✅ 完了 |
+| 集計機能実装 (Phase 2) | ⬜ 次回着手 |
 
 ## 6. ドキュメント一覧
 
@@ -87,6 +93,9 @@
 | ドメインモデル設計 | `docs/domain-model.md` | エンティティ・値オブジェクト・ビジネスルールの定義 |
 | DB設計書 | `docs/db-design.md` | ER図および各テーブルの詳細カラム定義 |
 | Copilot指示書 | `.github/copilot-instructions.md` | AIアシスタント用コーディングガイドライン |
+| Go Backend 規約 | `.github/instructions/go-backend.instructions.md` | Gin ベースのバックエンドコーディング規約 |
+| Vue Frontend 規約 | `.github/instructions/vue-frontend.instructions.md` | Vue 3 フロントエンドコーディング規約 |
+| Docker構成 | `docker-compose.yml` | 開発環境のコンテナ定義 |
 
 ## 7. 用語定義
 
