@@ -79,6 +79,7 @@
 | システム構成構築 | ✅ 完了 |
 | MVP実装 (Phase 1) | ✅ 完了 |
 | 集計機能実装 (Phase 2) | ✅ 完了 |
+| **テストカバレッジ拡充 (UCマッピング)** | ✅ 完了 |
 | 拡張機能 (Phase 3) | ⬜ 次回着手 |
 
 ## 6. ドキュメント一覧
@@ -93,6 +94,7 @@
 | 画面設計 | `docs/screen-design.md` | 全画面の構成・レイアウト・項目定義 |
 | ドメインモデル設計 | `docs/domain-model.md` | エンティティ・値オブジェクト・ビジネスルールの定義 |
 | DB設計書 | `docs/db-design.md` | ER図および各テーブルの詳細カラム定義 |
+| **テストカバレッジレポート** | `.gemini/antigravity/brain/.../artifacts/test_coverage_report.md` | **ユースケースとテストのマッピング定義** |
 | Copilot指示書 | `.github/copilot-instructions.md` | AIアシスタント用コーディングガイドライン |
 | Go Backend 規約 | `.github/instructions/go-backend.instructions.md` | Gin ベースのバックエンドコーディング規約 |
 | Vue Frontend 規約 | `.github/instructions/vue-frontend.instructions.md` | Vue 3 フロントエンドコーディング規約 |
