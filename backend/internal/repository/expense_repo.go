@@ -11,18 +11,18 @@ import (
 	"github.com/amical/routine-design/backend/internal/model"
 )
 
-// ExpenseRepository は経費データのDB操作を行う。
-type ExpenseRepository struct {
+// pgExpenseRepository は経費データのDB操作を行うPostgreSQL実装。
+type pgExpenseRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewExpenseRepository はExpenseRepositoryを生成する。
-func NewExpenseRepository(pool *pgxpool.Pool) *ExpenseRepository {
-	return &ExpenseRepository{pool: pool}
+// NewExpenseRepository はExpenseRepositoryインターフェースを満たす構造体を生成する。
+func NewExpenseRepository(pool *pgxpool.Pool) ExpenseRepository {
+	return &pgExpenseRepository{pool: pool}
 }
 
 // FindByID はIDで経費を検索する。
-func (r *ExpenseRepository) FindByID(ctx context.Context, id string) (*model.Expense, error) {
+func (r *pgExpenseRepository) FindByID(ctx context.Context, id string) (*model.Expense, error) {
 	query := `
 		SELECT e.id, e.user_id, u.name, e.expense_date, e.category_id, c.name,
 		       e.amount, e.description, e.receipt_image_path, e.status,
@@ -36,7 +36,7 @@ func (r *ExpenseRepository) FindByID(ctx context.Context, id string) (*model.Exp
 }
 
 // FindByUserID はユーザーIDで経費一覧を取得する。
-func (r *ExpenseRepository) FindByUserID(ctx context.Context, userID string) ([]model.Expense, error) {
+func (r *pgExpenseRepository) FindByUserID(ctx context.Context, userID string) ([]model.Expense, error) {
 	query := `
 		SELECT e.id, e.user_id, u.name, e.expense_date, e.category_id, c.name,
 		       e.amount, e.description, e.receipt_image_path, e.status,
@@ -51,7 +51,7 @@ func (r *ExpenseRepository) FindByUserID(ctx context.Context, userID string) ([]
 }
 
 // FindByStatuses はステータス群に該当する経費一覧を取得する。
-func (r *ExpenseRepository) FindByStatuses(ctx context.Context, statuses []string) ([]model.Expense, error) {
+func (r *pgExpenseRepository) FindByStatuses(ctx context.Context, statuses []string) ([]model.Expense, error) {
 	query := `
 		SELECT e.id, e.user_id, u.name, e.expense_date, e.category_id, c.name,
 		       e.amount, e.description, e.receipt_image_path, e.status,
@@ -66,7 +66,7 @@ func (r *ExpenseRepository) FindByStatuses(ctx context.Context, statuses []strin
 }
 
 // Create は経費を新規作成する。
-func (r *ExpenseRepository) Create(ctx context.Context, expense *model.Expense) error {
+func (r *pgExpenseRepository) Create(ctx context.Context, expense *model.Expense) error {
 	query := `
 		INSERT INTO expenses (user_id, expense_date, category_id, amount, description, status)
 		VALUES ($1, $2, $3, $4, $5, $6)
@@ -79,7 +79,7 @@ func (r *ExpenseRepository) Create(ctx context.Context, expense *model.Expense) 
 }
 
 // Update は経費を更新する。
-func (r *ExpenseRepository) Update(ctx context.Context, expense *model.Expense) error {
+func (r *pgExpenseRepository) Update(ctx context.Context, expense *model.Expense) error {
 	query := `
 		UPDATE expenses
 		SET expense_date = $2, category_id = $3, amount = $4, description = $5,
@@ -99,7 +99,7 @@ func (r *ExpenseRepository) Update(ctx context.Context, expense *model.Expense) 
 }
 
 // UpdateStatus はステータスを更新する（排他制御付き）。
-func (r *ExpenseRepository) UpdateStatus(ctx context.Context, id string, expectedStatus string, newStatus string) error {
+func (r *pgExpenseRepository) UpdateStatus(ctx context.Context, id string, expectedStatus string, newStatus string) error {
 	now := time.Now()
 	query := `
 		UPDATE expenses
@@ -121,7 +121,7 @@ func (r *ExpenseRepository) UpdateStatus(ctx context.Context, id string, expecte
 }
 
 // Delete は下書きの経費を削除する。
-func (r *ExpenseRepository) Delete(ctx context.Context, id string, userID string) error {
+func (r *pgExpenseRepository) Delete(ctx context.Context, id string, userID string) error {
 	query := `DELETE FROM expenses WHERE id = $1 AND user_id = $2 AND status = 'draft'`
 	tag, err := GetDBQuerier(ctx, r.pool).Exec(ctx, query, id, userID)
 	if err != nil {
@@ -133,7 +133,7 @@ func (r *ExpenseRepository) Delete(ctx context.Context, id string, userID string
 	return nil
 }
 
-func (r *ExpenseRepository) scanExpense(row pgx.Row) (*model.Expense, error) {
+func (r *pgExpenseRepository) scanExpense(row pgx.Row) (*model.Expense, error) {
 	var e model.Expense
 	var expenseDate time.Time
 	err := row.Scan(
@@ -151,7 +151,7 @@ func (r *ExpenseRepository) scanExpense(row pgx.Row) (*model.Expense, error) {
 	return &e, nil
 }
 
-func (r *ExpenseRepository) queryExpenses(ctx context.Context, query string, args ...interface{}) ([]model.Expense, error) {
+func (r *pgExpenseRepository) queryExpenses(ctx context.Context, query string, args ...interface{}) ([]model.Expense, error) {
 	rows, err := GetDBQuerier(ctx, r.pool).Query(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query expenses: %w", err)

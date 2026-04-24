@@ -10,13 +10,13 @@ import (
 
 // ApprovalService は承認ワークフローのビジネスロジックを提供する。
 type ApprovalService struct {
-	expenseRepo  *repository.ExpenseRepository
-	approvalRepo *repository.ApprovalRepository
+	expenseRepo  repository.ExpenseRepository
+	approvalRepo repository.ApprovalRepository
 	txManager    repository.TransactionManager
 }
 
 // NewApprovalService はApprovalServiceを生成する。
-func NewApprovalService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository, txManager repository.TransactionManager) *ApprovalService {
+func NewApprovalService(expenseRepo repository.ExpenseRepository, approvalRepo repository.ApprovalRepository, txManager repository.TransactionManager) *ApprovalService {
 	return &ApprovalService{expenseRepo: expenseRepo, approvalRepo: approvalRepo, txManager: txManager}
 }
 

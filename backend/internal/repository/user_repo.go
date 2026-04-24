@@ -10,18 +10,18 @@ import (
 	"github.com/amical/routine-design/backend/internal/model"
 )
 
-// UserRepository はユーザーデータのDB操作を行う。
-type UserRepository struct {
+// pgUserRepository はユーザーデータのDB操作を行うPostgreSQL実装。
+type pgUserRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewUserRepository はUserRepositoryを生成する。
-func NewUserRepository(pool *pgxpool.Pool) *UserRepository {
-	return &UserRepository{pool: pool}
+// NewUserRepository はUserRepositoryインターフェースを満たす構造体を生成する。
+func NewUserRepository(pool *pgxpool.Pool) UserRepository {
+	return &pgUserRepository{pool: pool}
 }
 
 // FindByEmail はメールアドレスでユーザーを検索する。
-func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*model.User, error) {
+func (r *pgUserRepository) FindByEmail(ctx context.Context, email string) (*model.User, error) {
 	query := `SELECT id, name, email, password_hash, created_at, updated_at FROM users WHERE email = $1`
 	row := r.pool.QueryRow(ctx, query, email)
 
@@ -35,7 +35,7 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*model.
 	}
 
 	// ロール取得
-	roles, err := r.findRoles(ctx, user.ID)
+	roles, err := r.GetRoles(ctx, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("find roles for user %s: %w", user.ID, err)
 	}
@@ -45,7 +45,7 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*model.
 }
 
 // FindByID はIDでユーザーを検索する。
-func (r *UserRepository) FindByID(ctx context.Context, id string) (*model.User, error) {
+func (r *pgUserRepository) FindByID(ctx context.Context, id string) (*model.User, error) {
 	query := `SELECT id, name, email, password_hash, created_at, updated_at FROM users WHERE id = $1`
 	row := r.pool.QueryRow(ctx, query, id)
 
@@ -58,7 +58,7 @@ func (r *UserRepository) FindByID(ctx context.Context, id string) (*model.User, 
 		return nil, fmt.Errorf("find user by id: %w", err)
 	}
 
-	roles, err := r.findRoles(ctx, user.ID)
+	roles, err := r.GetRoles(ctx, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("find roles for user %s: %w", user.ID, err)
 	}
@@ -67,7 +67,8 @@ func (r *UserRepository) FindByID(ctx context.Context, id string) (*model.User, 
 	return &user, nil
 }
 
-func (r *UserRepository) findRoles(ctx context.Context, userID string) ([]string, error) {
+// GetRoles はユーザーのロール一覧を取得する。
+func (r *pgUserRepository) GetRoles(ctx context.Context, userID string) ([]string, error) {
 	query := `SELECT role FROM user_roles WHERE user_id = $1`
 	rows, err := r.pool.Query(ctx, query, userID)
 	if err != nil {

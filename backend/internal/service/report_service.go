@@ -10,11 +10,11 @@ import (
 
 // ReportService は集計レポートのビジネスロジックを提供する。
 type ReportService struct {
-	reportRepo *repository.ReportRepository
+	reportRepo repository.ReportRepository
 }
 
 // NewReportService はReportServiceを生成する。
-func NewReportService(reportRepo *repository.ReportRepository) *ReportService {
+func NewReportService(reportRepo repository.ReportRepository) *ReportService {
 	return &ReportService{reportRepo: reportRepo}
 }
 

@@ -10,13 +10,13 @@ import (
 
 // ExpenseService は経費のビジネスロジックを提供する。
 type ExpenseService struct {
-	expenseRepo  *repository.ExpenseRepository
-	approvalRepo *repository.ApprovalRepository
+	expenseRepo  repository.ExpenseRepository
+	approvalRepo repository.ApprovalRepository
 	txManager    repository.TransactionManager
 }
 
 // NewExpenseService はExpenseServiceを生成する。
-func NewExpenseService(expenseRepo *repository.ExpenseRepository, approvalRepo *repository.ApprovalRepository, txManager repository.TransactionManager) *ExpenseService {
+func NewExpenseService(expenseRepo repository.ExpenseRepository, approvalRepo repository.ApprovalRepository, txManager repository.TransactionManager) *ExpenseService {
 	return &ExpenseService{expenseRepo: expenseRepo, approvalRepo: approvalRepo, txManager: txManager}
 }
 

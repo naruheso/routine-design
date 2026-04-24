@@ -17,11 +17,11 @@ import (
 
 // AuthService は認証ビジネスロジックを提供する。
 type AuthService struct {
-	userRepo *repository.UserRepository
+	userRepo repository.UserRepository
 }
 
 // NewAuthService はAuthServiceを生成する。
-func NewAuthService(userRepo *repository.UserRepository) *AuthService {
+func NewAuthService(userRepo repository.UserRepository) *AuthService {
 	return &AuthService{userRepo: userRepo}
 }
 

@@ -9,18 +9,18 @@ import (
 	"github.com/amical/routine-design/backend/internal/model"
 )
 
-// ApprovalRepository は承認履歴のDB操作を行う。
-type ApprovalRepository struct {
+// pgApprovalRepository は承認履歴のDB操作を行うPostgreSQL実装。
+type pgApprovalRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewApprovalRepository はApprovalRepositoryを生成する。
-func NewApprovalRepository(pool *pgxpool.Pool) *ApprovalRepository {
-	return &ApprovalRepository{pool: pool}
+// NewApprovalRepository はApprovalRepositoryインターフェースを満たす構造体を生成する。
+func NewApprovalRepository(pool *pgxpool.Pool) ApprovalRepository {
+	return &pgApprovalRepository{pool: pool}
 }
 
 // Create は承認履歴を記録する。
-func (r *ApprovalRepository) Create(ctx context.Context, history *model.ApprovalHistory) error {
+func (r *pgApprovalRepository) Create(ctx context.Context, history *model.ApprovalHistory) error {
 	query := `
 		INSERT INTO approval_histories (expense_id, action, actor_id, actor_role, comment)
 		VALUES ($1, $2, $3, $4, $5)
@@ -32,7 +32,7 @@ func (r *ApprovalRepository) Create(ctx context.Context, history *model.Approval
 }
 
 // FindByExpenseID は経費IDで承認履歴を取得する。
-func (r *ApprovalRepository) FindByExpenseID(ctx context.Context, expenseID string) ([]model.ApprovalHistory, error) {
+func (r *pgApprovalRepository) FindByExpenseID(ctx context.Context, expenseID string) ([]model.ApprovalHistory, error) {
 	query := `
 		SELECT ah.id, ah.expense_id, ah.action, ah.actor_id, u.name, ah.actor_role, ah.comment, ah.created_at
 		FROM approval_histories ah
@@ -58,18 +58,18 @@ func (r *ApprovalRepository) FindByExpenseID(ctx context.Context, expenseID stri
 	return histories, nil
 }
 
-// CategoryRepository は勘定科目のDB操作を行う。
-type CategoryRepository struct {
+// pgCategoryRepository は勘定科目のDB操作を行うPostgreSQL実装。
+type pgCategoryRepository struct {
 	pool *pgxpool.Pool
 }
 
-// NewCategoryRepository はCategoryRepositoryを生成する。
-func NewCategoryRepository(pool *pgxpool.Pool) *CategoryRepository {
-	return &CategoryRepository{pool: pool}
+// NewCategoryRepository はCategoryRepositoryインターフェースを満たす構造体を生成する。
+func NewCategoryRepository(pool *pgxpool.Pool) CategoryRepository {
+	return &pgCategoryRepository{pool: pool}
 }
 
 // FindAllActive は有効な勘定科目を取得する。
-func (r *CategoryRepository) FindAllActive(ctx context.Context) ([]model.Category, error) {
+func (r *pgCategoryRepository) FindAllActive(ctx context.Context) ([]model.Category, error) {
 	query := `SELECT id, code, name, sort_order, is_active FROM categories WHERE is_active = true ORDER BY sort_order`
 	rows, err := GetDBQuerier(ctx, r.pool).Query(ctx, query)
 	if err != nil {

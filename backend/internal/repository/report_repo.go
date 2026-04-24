@@ -9,18 +9,18 @@ import (
 	"github.com/amical/routine-design/backend/internal/model"
 )
 
-// ReportRepository は集計レポートのDB操作を提供する。
-type ReportRepository struct {
+// pgReportRepository は集計レポートのDB操作を提供するPostgreSQL実装。
+type pgReportRepository struct {
 	db DBQuerier
 }
 
-// NewReportRepository はReportRepositoryを生成する。
-func NewReportRepository(db DBQuerier) *ReportRepository {
-	return &ReportRepository{db: db}
+// NewReportRepository はReportRepositoryインターフェースを満たす構造体を生成する。
+func NewReportRepository(db DBQuerier) ReportRepository {
+	return &pgReportRepository{db: db}
 }
 
 // AggregateByEmployee は指定年月の承認済み経費を社員別に集計する（BR-05）。
-func (r *ReportRepository) AggregateByEmployee(ctx context.Context, year, month int) ([]model.EmployeeReport, error) {
+func (r *pgReportRepository) AggregateByEmployee(ctx context.Context, year, month int) ([]model.EmployeeReport, error) {
 	query := `
 		SELECT
 			e.user_id,
@@ -54,7 +54,7 @@ func (r *ReportRepository) AggregateByEmployee(ctx context.Context, year, month 
 }
 
 // AggregateByCategory は指定年月の承認済み経費を勘定科目別に集計する（BR-05）。
-func (r *ReportRepository) AggregateByCategory(ctx context.Context, year, month int) ([]model.CategoryReport, error) {
+func (r *pgReportRepository) AggregateByCategory(ctx context.Context, year, month int) ([]model.CategoryReport, error) {
 	query := `
 		SELECT
 			e.category_id,

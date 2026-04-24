@@ -88,11 +88,11 @@ func (h *ApprovalHandler) Reject(c *gin.Context) {
 
 // CategoryHandler は勘定科目関連のHTTPハンドラを提供する。
 type CategoryHandler struct {
-	categoryRepo *repository.CategoryRepository
+	categoryRepo repository.CategoryRepository
 }
 
 // NewCategoryHandler はCategoryHandlerを生成する。
-func NewCategoryHandler(categoryRepo *repository.CategoryRepository) *CategoryHandler {
+func NewCategoryHandler(categoryRepo repository.CategoryRepository) *CategoryHandler {
 	return &CategoryHandler{categoryRepo: categoryRepo}
 }
 
