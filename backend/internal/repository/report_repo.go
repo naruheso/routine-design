@@ -4,19 +4,26 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/amical/routine-design/backend/internal/model"
 )
 
+// DBQuerier は pgxpool.Pool の一部のメソッドを抽象化したインターフェース。
+type DBQuerier interface {
+	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
+	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
+}
+
 // ReportRepository は集計レポートのDB操作を提供する。
 type ReportRepository struct {
-	pool *pgxpool.Pool
+	db DBQuerier
 }
 
 // NewReportRepository はReportRepositoryを生成する。
-func NewReportRepository(pool *pgxpool.Pool) *ReportRepository {
-	return &ReportRepository{pool: pool}
+func NewReportRepository(db DBQuerier) *ReportRepository {
+	return &ReportRepository{db: db}
 }
 
 // AggregateByEmployee は指定年月の承認済み経費を社員別に集計する（BR-05）。
@@ -36,7 +43,7 @@ func (r *ReportRepository) AggregateByEmployee(ctx context.Context, year, month 
 		ORDER BY total_amount DESC
 	`
 
-	rows, err := r.pool.Query(ctx, query, year, month)
+	rows, err := r.db.Query(ctx, query, year, month)
 	if err != nil {
 		return nil, fmt.Errorf("aggregate by employee: %w", err)
 	}
@@ -70,7 +77,7 @@ func (r *ReportRepository) AggregateByCategory(ctx context.Context, year, month 
 		ORDER BY total_amount DESC
 	`
 
-	rows, err := r.pool.Query(ctx, query, year, month)
+	rows, err := r.db.Query(ctx, query, year, month)
 	if err != nil {
 		return nil, fmt.Errorf("aggregate by category: %w", err)
 	}
@@ -86,3 +93,6 @@ func (r *ReportRepository) AggregateByCategory(ctx context.Context, year, month 
 	}
 	return reports, nil
 }
+
+// Note: *pgxpool.Pool は DBQuerier インターフェースを満たしているため、既存のコードを変更せずにそのまま利用可能。
+var _ DBQuerier = (*pgxpool.Pool)(nil)

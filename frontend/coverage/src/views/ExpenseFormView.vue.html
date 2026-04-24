@@ -1,0 +1,439 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/views/ExpenseFormView.vue</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/views</a> ExpenseFormView.vue</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/88</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/88</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;script setup lang="ts"&gt;
+<span class="cstat-no" title="statement not covered" >import { ref, onMounted, computed } from 'vue'</span>
+<span class="cstat-no" title="statement not covered" >import { useRoute, useRouter } from 'vue-router'</span>
+<span class="cstat-no" title="statement not covered" >import { useExpenseStore } from '@/stores/expense'</span>
+<span class="cstat-no" title="statement not covered" >import AppLayout from '@/components/common/AppLayout.vue'</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >const store = useExpenseStore()</span>
+<span class="cstat-no" title="statement not covered" >const route = useRoute()</span>
+<span class="cstat-no" title="statement not covered" >const router = useRouter()</span>
+<span class="cstat-no" title="statement not covered" >const isEdit = computed(() =&gt; !!route.params.id)</span>
+<span class="cstat-no" title="statement not covered" >const expenseId = computed(() =&gt; route.params.id as string)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >const form = ref({ expenseDate: '', categoryId: '', amount: 0, description: '' })</span>
+<span class="cstat-no" title="statement not covered" >const formError = ref&lt;string | null&gt;(null)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >onMounted(async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  await store.loadCategories()</span>
+<span class="cstat-no" title="statement not covered" >  if (isEdit.value) {</span>
+<span class="cstat-no" title="statement not covered" >    await store.loadExpenseDetail(expenseId.value)</span>
+<span class="cstat-no" title="statement not covered" >    if (store.currentExpense) {</span>
+<span class="cstat-no" title="statement not covered" >      const e = store.currentExpense.expense</span>
+<span class="cstat-no" title="statement not covered" >      form.value = { expenseDate: e.expenseDate, categoryId: e.categoryId, amount: e.amount, description: e.description }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >})</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >async function handleSave() {</span>
+<span class="cstat-no" title="statement not covered" >  formError.value = null</span>
+<span class="cstat-no" title="statement not covered" >  if (!form.value.expenseDate) { formError.value = '日付を入力してください'; return }</span>
+<span class="cstat-no" title="statement not covered" >  if (!form.value.categoryId) { formError.value = '勘定科目を選択してください'; return }</span>
+<span class="cstat-no" title="statement not covered" >  if (form.value.amount &lt; 1) { formError.value = '金額は1円以上で入力してください'; return }</span>
+<span class="cstat-no" title="statement not covered" >  if (form.value.amount &gt; 999999) { formError.value = '金額は999,999円以下で入力してください'; return }</span>
+<span class="cstat-no" title="statement not covered" >  if (!form.value.description) { formError.value = '摘要を入力してください'; return }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  let ok: boolean</span>
+<span class="cstat-no" title="statement not covered" >  if (isEdit.value) {</span>
+<span class="cstat-no" title="statement not covered" >    ok = await store.editExpense(expenseId.value, form.value)</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    ok = await store.addExpense(form.value)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  if (ok) router.push('/')</span>
+<span class="cstat-no" title="statement not covered" >  else formError.value = store.error</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >async function handleSubmit() {</span>
+<span class="cstat-no" title="statement not covered" >  formError.value = null</span>
+<span class="cstat-no" title="statement not covered" >  if (isEdit.value) {</span>
+<span class="cstat-no" title="statement not covered" >    const ok = await store.editExpense(expenseId.value, form.value)</span>
+<span class="cstat-no" title="statement not covered" >    if (!ok) { formError.value = store.error; return }</span>
+<span class="cstat-no" title="statement not covered" >    const submitOk = await store.submit(expenseId.value)</span>
+<span class="cstat-no" title="statement not covered" >    if (submitOk) router.push('/')</span>
+<span class="cstat-no" title="statement not covered" >    else formError.value = store.error</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    const ok = await store.addExpense(form.value)</span>
+<span class="cstat-no" title="statement not covered" >    if (!ok) { formError.value = store.error; return }</span>
+    // 作成後に最新の経費IDで申請
+<span class="cstat-no" title="statement not covered" >    if (store.expenses.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      const submitOk = await store.submit(store.expenses[0]!.id)</span>
+<span class="cstat-no" title="statement not covered" >      if (submitOk) router.push('/')</span>
+<span class="cstat-no" title="statement not covered" >      else formError.value = store.error</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&lt;/script&gt;
+&nbsp;
+&lt;template&gt;
+<span class="cstat-no" title="statement not covered" >  &lt;AppLayout&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div class="form-view"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;h2&gt;{{ isEdit ? '経費編集' : '経費入力' }}&lt;/h2&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;div v-if="formError || store.error" class="err"&gt;{{ formError || store.error }}&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;form class="expense-form" @submit.prevent="handleSave"&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;div class="fg"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;label for="expenseDate"&gt;日付 &lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;input id="expenseDate" v-model="form.expenseDate" type="date" :max="new Date().toISOString().slice(0,10)" required /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;div class="fg"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;label for="categoryId"&gt;勘定科目 &lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;select id="categoryId" v-model="form.categoryId" required&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;option value="" disabled&gt;選択してください&lt;/option&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;option v-for="c in store.categories" :key="c.id" :value="c.id"&gt;{{ c.name }}&lt;/option&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;/select&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;div class="fg"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;label for="amount"&gt;金額 &lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;input id="amount" v-model.number="form.amount" type="number" min="1" max="999999" placeholder="例: 1500" required /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;div class="fg"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;label for="description"&gt;摘要 &lt;span class="req"&gt;*&lt;/span&gt;&lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;textarea id="description" v-model="form.description" maxlength="500" rows="3" placeholder="経費の用途や詳細を入力" required&gt;&lt;/textarea&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;span class="char-count"&gt;{{ form.description.length }}/500&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;div class="form-actions"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;button type="button" class="btn-c" @click="router.push('/')"&gt;キャンセル&lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;button type="submit" class="btn-s" :disabled="store.loading"&gt;下書き保存&lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;button type="button" class="btn-p" :disabled="store.loading" @click="handleSubmit"&gt;申請する&lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/form&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  &lt;/AppLayout&gt;</span>
+&lt;/template&gt;
+&nbsp;
+&lt;style scoped&gt;
+.form-view{max-width:600px}
+.form-view h2{margin-bottom:var(--spacing-lg)}
+.expense-form{display:flex;flex-direction:column;gap:var(--spacing-md);background:var(--color-surface-card);padding:var(--spacing-xl);border-radius:var(--radius-card);box-shadow:var(--shadow-card)}
+.fg{display:flex;flex-direction:column;gap:var(--spacing-xs)}
+.fg label{font-size:.875rem;font-weight:500;color:var(--color-text-heading)}
+.req{color:var(--color-danger)}
+.fg input,.fg select,.fg textarea{border:1px solid var(--color-input-border);border-radius:var(--radius-input);padding:var(--spacing-sm) var(--spacing-md);font-size:1rem}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--color-primary);box-shadow:0 0 0 2px rgba(40,100,240,.15)}
+.char-count{font-size:.75rem;color:var(--color-text-muted);text-align:right}
+.form-actions{display:flex;gap:var(--spacing-sm);justify-content:flex-end;margin-top:var(--spacing-md)}
+.btn-c{background:var(--color-bg-light);border:1px solid var(--color-border);border-radius:var(--radius-button);padding:var(--spacing-sm) var(--spacing-lg);cursor:pointer}
+.btn-s{background:#fff;border:2px solid var(--color-primary);color:var(--color-primary);border-radius:var(--radius-button);padding:var(--spacing-sm) var(--spacing-lg);cursor:pointer;font-weight:500}
+.btn-p{background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-button);padding:var(--spacing-sm) var(--spacing-lg);cursor:pointer;font-weight:500}
+.btn-p:hover{background:var(--color-primary-hover)}
+.err{background:#fef2f2;border:1px solid var(--color-danger);color:var(--color-danger);padding:var(--spacing-sm) var(--spacing-md);border-radius:var(--radius-input);margin-bottom:var(--spacing-md)}
+&lt;/style&gt;
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-24T04:10:43.432Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    
